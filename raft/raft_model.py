@@ -450,19 +450,21 @@ class Model():
         # check viability of matrices
         message=''
         for i in range(self.nDOF):
-            if M_tot[i,i] < 1.0:
-                message += f'Diagonal entry {i} of system mass matrix is less than 1 ({M_tot[i,i]}). '
-            if C_tot[i,i] < 1.0:
-                message += f'Diagonal entry {i} of system stiffness matrix is less than 1 ({C_tot[i,i]}). '
-                
+            if not (fowt.ms == None and i == 0,1,5):  # X, Y. and YAW stiffness zero for no moorings
+                if M_tot[i,i] < 1.0:
+                    message += f'Diagonal entry {i} of system mass matrix is less than 1 ({M_tot[i,i]}). '
+                if C_tot[i,i] < 1.0:
+                    message += f'Diagonal entry {i} of system stiffness matrix is less than 1 ({C_tot[i,i]}). '
+
         if len(message) > 0:
             raise RuntimeError('System matrices computed by RAFT have one or more small or negative diagonals: '+message)
 
         # calculate natural frequencies (using eigen analysis to get proper values for pitch and roll - otherwise would need to base about CG if using diagonal entries only)
         eigenvals, eigenvectors = np.linalg.eig(np.linalg.solve(M_tot, C_tot))   # <<< need to sort this out so it gives desired modes, some are currently a bit messy
 
-        if any(eigenvals <= 0.0):
-            raise RuntimeError("Error: zero or negative system eigenvalues detected.")
+        if fowt.ms != None:    
+            if any(eigenvals <= 0.0):
+                raise RuntimeError("Error: zero or negative system eigenvalues detected.")
 
         # sort to normal DOF order based on which DOF is largest in each eigenvector
         ind_list = []
@@ -831,6 +833,10 @@ class Model():
         
         
         # Now find static equilibrium offsets 
+
+        print(eval_func_equil)
+        print(X_initial)
+        print(step_func_equil)
         X, Y, info = dsolve2(eval_func_equil, X_initial, step_func=step_func_equil, 
                              tol=tols, a_max=1.6, maxIter=20, display=0, args={'display': display} ) #, dodamping=True)
         #X, Y, info = dsolve2(eval_func_equil, X_initial, step_func=step_func_equil, 

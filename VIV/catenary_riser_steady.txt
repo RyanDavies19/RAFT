@@ -1,0 +1,40 @@
+From Thorsen Paper 4 uniform current
+---------------------- LINE DICTIONARY -----------------------------------------------------
+LineType  Diam    MassDenInAir   EA     cIntDamp     EI       Cd      Ca    CdAx    CaAx   Cl
+(-)       (m)       (kg/m)       (N)     (Pa-s)    (N-m^2)    (-)     (-)    (-)     (-)   (-)  
+cable     0.024      0.69       6.66e5    -0.008      10.5   1.2     2.0    0.08   0.08   0.7
+----------------------- BODIES ------------------------------------------------------
+ID   Attachment    X0     Y0     Z0     r0      p0     y0     Mass          CG*          I*      Volume   CdA*   Ca*
+(#)     (-)        (m)    (m)    (m)   (deg)   (deg)  (deg)   (kg)          (m)         (kg-m^2)  (m^3)   (m^2)  (-)
+1     Fixed     0.00   0.00   -1.00   0.00   0.00   0.00   0.0000e+00  0.00|0.00|0.00 0.000e+00   0.00   0.00  0.00
+---------------------- POINTS -----------------------------------------------------
+Node      Type      X      Y         Z        M       V      CdA   Ca 
+(-)       (-)      (m)    (m)       (m)      (kg)    (m^3)   (m2)  () 
+1       Fixed       -21.0425      0         -10         0       0       0    0
+2       Body1       0           0          0         0       0       0    0
+---------------------- LINES -----------------------------------------------------
+Line     LineType   NodeA     NodeB   UnstrLen  NumSegs   Flags/Outputs
+(-)       (-)       (-)       (-)       (m)       (-)         (-)
+1        cable      1          2        23.71      50        sVpK
+---------------------- SOLVER OPTIONS ---------------------------------------- 
+2        writeLog 
+Rk4        tScheme
+0.0001    dtM          - time step to use in mooring integration
+1.5e5    kb           - bottom stiffness  
+1e4      cb           - bottom damping  
+0.2     FrictionCoefficient  - seabed friction
+10       WtrDpth       - water depth
+2.0      ICDfac       - factor by which to scale drag coefficients during dynamic relaxation IC gen
+0.001   ICthresh      - threshold for IC convergence
+0.1     dtIC
+100        TmaxIC        - threshold for IC convergence
+0.001             dtOut
+1000             WtrDnsty   
+5.0         vivTs 
+1       Currents
+---------------------- OUTPUTS -----------------------------------------
+Line1N25PY
+Line1N45PY
+Line1N45PZ
+FairTen1
+--------------------- need this line ------------------
